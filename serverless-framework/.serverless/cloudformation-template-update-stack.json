@@ -1,0 +1,300 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "The AWS CloudFormation template for this Serverless application",
+  "Resources": {
+    "ServerlessDeploymentBucket": {
+      "Type": "AWS::S3::Bucket"
+    },
+    "CreateLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/aws-nodejs-ecma-script-dev-create"
+      }
+    },
+    "ReadLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/aws-nodejs-ecma-script-dev-read"
+      }
+    },
+    "UpdateLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/aws-nodejs-ecma-script-dev-update"
+      }
+    },
+    "DestroyLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/aws-nodejs-ecma-script-dev-destroy"
+      }
+    },
+    "IamRoleLambdaExecution": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "lambda.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": {
+              "Fn::Join": [
+                "-",
+                [
+                  "dev",
+                  "aws-nodejs-ecma-script",
+                  "lambda"
+                ]
+              ]
+            },
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:CreateLogStream"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/aws-nodejs-ecma-script-dev-create:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/aws-nodejs-ecma-script-dev-read:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/aws-nodejs-ecma-script-dev-update:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/aws-nodejs-ecma-script-dev-destroy:*"
+                    }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:PutLogEvents"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/aws-nodejs-ecma-script-dev-create:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/aws-nodejs-ecma-script-dev-read:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/aws-nodejs-ecma-script-dev-update:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/aws-nodejs-ecma-script-dev-destroy:*:*"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "Path": "/",
+        "RoleName": {
+          "Fn::Join": [
+            "-",
+            [
+              "aws-nodejs-ecma-script",
+              "dev",
+              "us-east-1",
+              "lambdaRole"
+            ]
+          ]
+        }
+      }
+    },
+    "CreateLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/aws-nodejs-ecma-script/dev/1534016526773-2018-08-11T19:42:06.773Z/aws-nodejs-ecma-script.zip"
+        },
+        "FunctionName": "aws-nodejs-ecma-script-dev-create",
+        "Handler": "person/create.create",
+        "MemorySize": 1024,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 6
+      },
+      "DependsOn": [
+        "CreateLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "CreateLambdaVersionjt3P3qjENKjn9LvCJWANRaugy8hMJLSqxT3gHw2Ypk": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "CreateLambdaFunction"
+        },
+        "CodeSha256": "8e59zuUbiveOKbp7EQO23ud04gN5LZOrPzKjspx6ELs="
+      }
+    },
+    "ReadLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/aws-nodejs-ecma-script/dev/1534016526773-2018-08-11T19:42:06.773Z/aws-nodejs-ecma-script.zip"
+        },
+        "FunctionName": "aws-nodejs-ecma-script-dev-read",
+        "Handler": "person/read.read",
+        "MemorySize": 1024,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 6
+      },
+      "DependsOn": [
+        "ReadLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "ReadLambdaVersionmwYICJ7jtsSVDS7romIX04qu9iF63meo9eNkrnyM": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "ReadLambdaFunction"
+        },
+        "CodeSha256": "8e59zuUbiveOKbp7EQO23ud04gN5LZOrPzKjspx6ELs="
+      }
+    },
+    "UpdateLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/aws-nodejs-ecma-script/dev/1534016526773-2018-08-11T19:42:06.773Z/aws-nodejs-ecma-script.zip"
+        },
+        "FunctionName": "aws-nodejs-ecma-script-dev-update",
+        "Handler": "person/update.update",
+        "MemorySize": 1024,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 6
+      },
+      "DependsOn": [
+        "UpdateLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "UpdateLambdaVersionWJwOjK4734FYS4W0mYFMC5fB1VL50gtQdT0OBv3AqU": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "UpdateLambdaFunction"
+        },
+        "CodeSha256": "8e59zuUbiveOKbp7EQO23ud04gN5LZOrPzKjspx6ELs="
+      }
+    },
+    "DestroyLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/aws-nodejs-ecma-script/dev/1534016526773-2018-08-11T19:42:06.773Z/aws-nodejs-ecma-script.zip"
+        },
+        "FunctionName": "aws-nodejs-ecma-script-dev-destroy",
+        "Handler": "person/destroy.destroy",
+        "MemorySize": 1024,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 6
+      },
+      "DependsOn": [
+        "DestroyLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "DestroyLambdaVersion6Df0EbpdXZVyJqDnWMSkVEtnXszLe2pMxardbk6S5Y8": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "DestroyLambdaFunction"
+        },
+        "CodeSha256": "8e59zuUbiveOKbp7EQO23ud04gN5LZOrPzKjspx6ELs="
+      }
+    }
+  },
+  "Outputs": {
+    "ServerlessDeploymentBucketName": {
+      "Value": {
+        "Ref": "ServerlessDeploymentBucket"
+      }
+    },
+    "CreateLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "CreateLambdaVersionjt3P3qjENKjn9LvCJWANRaugy8hMJLSqxT3gHw2Ypk"
+      }
+    },
+    "ReadLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "ReadLambdaVersionmwYICJ7jtsSVDS7romIX04qu9iF63meo9eNkrnyM"
+      }
+    },
+    "UpdateLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "UpdateLambdaVersionWJwOjK4734FYS4W0mYFMC5fB1VL50gtQdT0OBv3AqU"
+      }
+    },
+    "DestroyLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "DestroyLambdaVersion6Df0EbpdXZVyJqDnWMSkVEtnXszLe2pMxardbk6S5Y8"
+      }
+    }
+  }
+}

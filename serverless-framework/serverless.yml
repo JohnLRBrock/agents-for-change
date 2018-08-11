@@ -7,14 +7,18 @@ plugins:
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs8.10
 
 functions:
-  first:
-    handler: first.hello
-  second:
-    handler: second.hello
+  create:
+    handler: person/create.create
     events:
-      - http:
-          method: get
-          path: second
+  read:
+    handler: person/read.read
+    events:
+  update:
+    handler: person/update.update
+    events:
+  destroy:
+    handler: person/destroy.destroy
+    events:

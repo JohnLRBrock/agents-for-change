@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/prefer-default-export
-export const hello = (event, context, callback) => {
+export const read = (event, context, callback) => {
   const p = new Promise((resolve) => {
     resolve('success');
   });
